@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+const request = require('request');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -26,16 +27,53 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
+  fs.readFile(exports.paths.list, 'utf8', (err, data) => {
+    const lines = data.split('\n');
+    callback(lines);
+  });
 };
 
 exports.isUrlInList = function(url, callback) {
+  let doesUrlExist = false;
+
+  exports.readListOfUrls( (urls) => {
+    for (let listedUrl of urls) {
+      if (url === listedUrl) { 
+        doesUrlExist = true; 
+        return callback(doesUrlExist);
+      }
+    }
+    callback(doesUrlExist);
+  });
 };
 
 exports.addUrlToList = function(url, callback) {
+  fs.appendFile(exports.paths.list, url + '\n', 'utf8', (err) => {
+    callback();
+  });
 };
 
 exports.isUrlArchived = function(url, callback) {
+  fs.access(exports.paths.archivedSites + '\\' + url, fs.constants.F_OK, (err) => {
+    err ? callback(false) : callback(true);
+  });
+
 };
 
 exports.downloadUrls = function(urls) {
+  //read the list of urls
+  //are all these urls archived?
+  //if not, download it, and add it to the site list
+
+  exports.readListOfUrls((urlList) => {
+    for (let url of urls) {
+      if ( !urlList.includes(url) ) {
+        request('http://' + url, (err, res, body) => {
+          fs.writeFile(exports.paths.archivedSites + '\\' + url, body, 'utf8', (err) => {
+            exports.addUrlToList(url, () => {});
+          });
+        });
+      }
+    }
+  });
 };

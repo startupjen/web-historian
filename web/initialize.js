@@ -1,5 +1,5 @@
 var fs = require('fs');
-const htmlfetcher = require('../workers/htmlfetcher')
+const htmlfetcher = require('../workers/htmlfetcher');
 
 // Sync is ok here because this is called just once on startup.
 module.exports = function (basePath) {
@@ -22,5 +22,5 @@ module.exports = function (basePath) {
     fs.mkdirSync(basePath + '/sites');
   }
 
-  htmlfetcher.startCron()
+  htmlfetcher.startCron();
 };

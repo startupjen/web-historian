@@ -31,24 +31,24 @@ exports.handleRequest = function (req, res) {
         console.log('POST - url is ', url);
 
         archive.isUrlArchived(url, (isArchived) => {
-          console.log('isArchived is ', isArchived)
+          console.log('isArchived is ', isArchived);
           if (isArchived) {
             const filePath = archive.paths.archivedSites + '\\' + url;
             fs.readFile(filePath, 'utf8', (err, data) => {
               res.end(data);
-            })
+            });
           } else {
             fs.appendFile(archive.paths.list, url + '\n', 'utf8', (err) => {
               if (err) { console.log('err is ', err); }
               const loadingPath = `${archive.paths.siteAssets}\\loading.html`;
               fs.readFile(loadingPath, 'utf8', (err, data) => { 
-                console.log('loading data is ', data)
-                res.statusCode = 303
+                console.log('loading data is ', data);
+                res.statusCode = 303;
                 res.end(data);
               });
             });
           }
-        })
+        });
       });
   }
 };

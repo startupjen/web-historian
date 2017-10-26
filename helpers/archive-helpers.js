@@ -55,7 +55,7 @@ exports.addUrlToList = function(url, callback) {
 
 exports.isUrlArchived = function(url, callback) {
   fs.access(exports.paths.archivedSites + '\\' + url, fs.constants.F_OK, (err) => {
-    console.log('archive-helpers: is there an err? ', err)
+    console.log('archive-helpers: is there an err? ', err);
     err ? callback(false) : callback(true);
   });
 
@@ -66,12 +66,12 @@ exports.downloadUrls = function(urls) {
   // exports.readListOfUrls((urlList) => {
   //   for (let url of urls) {
   //     if ( !urlList.includes(url) ) {
-        request('http://' + urls[0], (err, res, body) => {
-          console.log('downloaded url, content is ', body)
-          fs.writeFile(exports.paths.archivedSites + '\\' + urls[0], body, 'utf8', (err) => {
-            // exports.addUrlToList(url, () => {});
-          });
-        });
+  request('http://' + urls[0], (err, res, body) => {
+    console.log('downloaded url, content is ', body);
+    fs.writeFile(exports.paths.archivedSites + '\\' + urls[0], body, 'utf8', (err) => {
+      // exports.addUrlToList(url, () => {});
+    });
+  });
   //     }
   //   }
   // });
